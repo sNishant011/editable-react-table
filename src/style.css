@@ -379,3 +379,13 @@ html {
 .text-transform-capitalize {
   text-transform: capitalize;
 }
+.csvInput{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+.td.error .data-input{
+  background-color: rgba(255, 0, 0, 0.6);
+}

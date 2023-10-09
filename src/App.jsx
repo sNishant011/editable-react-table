@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import './style.css';
 import Table from './Table';
 import {
@@ -9,9 +9,13 @@ import {
   DataTypes,
 } from './utils';
 import update from 'immutability-helper';
+import CSVInputReader from './CSVInputReader';
 
 function reducer(state, action) {
   switch (action.type) {
+    case ActionTypes.RESET_TABLE:
+      const newData = action.payload;
+      return {data: newData, columns: state.columns}
     case ActionTypes.ADD_OPTION_TO_COLUMN:
       const optionIndex = state.columns.findIndex(
         column => column.id === action.columnId
@@ -185,7 +189,13 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, makeData(1000));
+  const [state, dispatch] = useReducer(reducer, makeData(20));
+  const [csvData, setCsvData] = useState([])
+  console.log(csvData)
+
+  useEffect(() => {
+    dispatch({type: ActionTypes.RESET_TABLE, payload: csvData})
+  }, [csvData])
 
   useEffect(() => {
     dispatch({ type: ActionTypes.ENABLE_RESET });
@@ -201,8 +211,10 @@ function App() {
       }}
     >
       <div style={{ marginBottom: 40, marginTop: 40 }}>
-        <h1>Editable React Table - Demo</h1>
+        <h1>CSV Parser with react table</h1>
       </div>
+      <CSVInputReader setData={setCsvData}/>
+
       <Table
         columns={state.columns}
         data={state.data}

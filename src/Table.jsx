@@ -58,6 +58,7 @@ export default function Table({
     rows,
     prepareRow,
     totalColumnsWidth,
+    data: reactTableData
   } = useTable(
     {
       columns,
@@ -81,7 +82,7 @@ export default function Table({
       return (
         <div {...row.getRowProps({ style })} className="tr">
           {row.cells.map(cell => (
-            <div {...cell.getCellProps()} className="td">
+            <div  key={cell.row.id} {...cell.getCellProps()} className={ `td ${cell.column.id === 'latitude' && cell.value > 40 ? 'error' : ''}` }>
               {cell.render('Cell')}
             </div>
           ))}
@@ -103,6 +104,10 @@ export default function Table({
     return false;
   }
 
+  const handleResubmit = () => {
+    console.log(reactTableData)
+  }
+
   return (
     <div style={{ maxWidth: '100vw', overflow: 'auto' }}>
       <div
@@ -111,7 +116,7 @@ export default function Table({
       >
         <div>
           {headerGroups.map(headerGroup => (
-            <div {...headerGroup.getHeaderGroupProps()} className="tr">
+            <div {...headerGroup.getHeaderGroupProps()} className="tr" key={headerGroup.id}>
               {headerGroup.headers.map(column => column.render('Header'))}
             </div>
           ))}
@@ -135,6 +140,7 @@ export default function Table({
             New
           </div>
         </div>
+        <button onClick={handleResubmit} style={{marginTop: '1rem', padding: '1rem 2rem'}}>Re-Submit</button>
       </div>
     </div>
   );
